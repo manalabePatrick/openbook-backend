@@ -14,28 +14,28 @@ const jwt = require("jsonwebtoken");
 //     }
 // });
 
-// const postSchema = new mongoose.Schema({
-//     content: {
-//         type: String,
-//         required: true
-//     },
-//     date: {
-//         type: Date,
-//         default: Date.now
-//     },
-//     theme: {
-//         type: String,
-//         default: "primary"
-//     },
-//     likes: {
-//         type: [String],
-//         default: []
-//     },
-//     comments: {
-//         type: [commentSchema],
-//         default: []
-//     }
-// });
+const postSchema = new mongoose.Schema({
+    content: {
+        type: String,
+        required: true
+    },
+    date: {
+        type: Date,
+        default: Date.now
+    },
+    theme: {
+        type: String,
+        default: "primary"
+    },
+    likes: {
+        type: [String],
+        default: []
+    },
+    // comments: {
+    //     type: [commentSchema],
+    //     default: []
+    // }
+});
 
 // const messageSchema = new mongoose.Schema({
 //     from_id: {
@@ -66,7 +66,7 @@ const userSchema = new mongoose.Schema({
     // friend_requests: [String],
     // besties: [String],
     // enemies: [String],
-    // posts: [postSchema],
+    posts: [postSchema],
     // messages: [messageSchema],
     // notifications: [String],
     // profile_image: { type: String, default: "default-avatar" },
@@ -99,5 +99,5 @@ userSchema.methods.getJwt = function() {
 
 mongoose.model("User", userSchema);
 // mongoose.model("Message", messageSchema);
-// mongoose.model("Post", postSchema);
+mongoose.model("Post", postSchema);
 // mongoose.model("Comment", commentSchema);

@@ -1,7 +1,7 @@
 const passport = require("passport");
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
-// const Post = mongoose.model("Post");
+const Post = mongoose.model("Post");
 // const Comment = mongoose.model("Comment");
 // const Message = mongoose.model("Message");
 // const timeAgo = require("time-ago");
@@ -378,32 +378,32 @@ const loginUser = function(req, res) {
 //     });
 // }
 
-// const createPost = function({ body, payload }, res) {
-//     if(!body.content || !body.theme) {
-//         return res.statusJson(400, { message: "Insufficient data sent with the request." });
-//     }
+const createPost = function({ body, payload }, res) {
+    if(!body.content || !body.theme) {
+        return res.statusJson(400, { message: "Insufficient data sent with the request." });
+    }
     
-//     let userId = payload._id;
+    let userId = '6073f7c40ddc710c542a287a';//payload._id;
     
-//     const post = new Post();
+    const post = new Post();
     
-//     post.theme = body.theme;
-//     post.content = body.content;
+    post.theme = body.theme;
+    post.content = body.content;
     
-//     User.findById(userId, (err, user) => {
-//         if(err) { return res.json({ err: err }); }
+    User.findById(userId, (err, user) => {
+        if(err) { return res.json({ err: err }); }
         
-//         let newPost = post.toObject();
-//         newPost.name = payload.name;
-//         newPost.ownerid = payload._id;
-//         newPost.ownerProfileImage = user.profile_image;
-//         user.posts.push(post);
-//         user.save((err) => {
-//             if(err) { return res.json({ err: err }); }
-//             return res.statusJson(201, { message: "Created post", newPost: newPost });
-//         });
-//     });
-// }
+        let newPost = post.toObject();
+        newPost.name = "wew";//payload.name;
+        newPost.ownerid = "wew";//payload._id;
+        //newPost.ownerProfileImage = user.profile_image;
+        user.posts.push(post);
+        user.save((err) => {
+            if(err) { return res.json({ err: err }); }
+            return res.statusJson(201, { message: "Created post", newPost: newPost });
+        });
+    });
+}
 
 // const likeUnlike = function({ payload, params }, res) {
 //     User.findById(params.ownerid, (err, user) => {
@@ -657,7 +657,7 @@ module.exports = {
     // getUserData,
     // getFriendRequests,
     // resolveFriendRequest,
-    // createPost,
+    createPost,
     // likeUnlike,
     // postCommentOnPost,
     // sendMessage,
