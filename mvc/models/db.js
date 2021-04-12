@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
-let dbURI = 'mongodb://localhost/A_Social_Media';
+let dbURI = 'mongodb://localhost/openbook';
 
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 
 if (process.env.NODE_ENV === 'production') {
     dbURI = process.env.MONGODB_URI;
@@ -13,7 +16,7 @@ mongoose.connect(dbURI, { useNewUrlParser: true });
 // heroku logs --tail
 
 mongoose.connection.on('connected', () => {
-    console.log(`Mongoose connected to ${dbURI}`);
+    console.log(`\nMongoose connected to ${dbURI}`);
 });
 
 mongoose.connection.on('error', err => {
