@@ -130,20 +130,20 @@ const registerUser = function({body}, res) {
     });
 }
 
-// const loginUser = function(req, res) {
-//     if(!req.body.email || !req.body.password) {
-//         return res.status(400).json({ message: "All fields are required." });
-//     }
+const loginUser = function(req, res) {
+    if(!req.body.email || !req.body.password) {
+        return res.status(400).json({ message: "All fields are required." });
+    }
     
     
-//     passport.authenticate("local", (err, user, info) => {
-//         if(err) { return res.status(404).json(err) }
-//         if(user) {
-//             const token = user.getJwt();
-//             res.status(201).json({token});
-//         } else { res.json(info); }
-//     })(req, res);
-// }
+    passport.authenticate("local", (err, user, info) => {
+        if(err) { return res.status(404).json(err) }
+        if(user) {
+            const token = user.getJwt();
+            res.status(201).json({token});
+        } else { res.json(info); }
+    })(req, res);
+}
 
 // const generateFeed = function({ payload }, res) {
 //     let posts = [];
@@ -650,7 +650,7 @@ module.exports = {
     // deleteAllUsers,
     // getAllUsers,
     registerUser,
-    // loginUser,
+    loginUser,
     // generateFeed,
     // getSearchResults,
     // makeFriendRequest,

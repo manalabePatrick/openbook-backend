@@ -8,7 +8,7 @@ const fakeUsersCtrl = require("../controllers/fake-users");
 
 // Logging In & Registering
 router.post("/register", usersCtrl.registerUser);
-// router.post("/login", usersCtrl.loginUser);
+router.post("/login", usersCtrl.loginUser);
 
 
 // // Get Requests
