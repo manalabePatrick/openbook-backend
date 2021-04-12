@@ -383,7 +383,7 @@ const createPost = function({ body, payload }, res) {
         return res.statusJson(400, { message: "Insufficient data sent with the request." });
     }
     
-    let userId = '6073f7c40ddc710c542a287a';//payload._id;
+    let userId = '6074196ca7d6230ab4c0c1c1';//payload._id;
     
     const post = new Post();
     
