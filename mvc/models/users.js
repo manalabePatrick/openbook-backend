@@ -37,6 +37,28 @@ const postSchema = new mongoose.Schema({
     // }
 });
 
+const bookSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true
+    },
+    date: {
+        type: Date,
+        default: Date.now
+    },
+    summary: {
+        type: String,
+    },
+    likes: {
+        type: [String],
+        default: []
+    },
+    // comments: {
+    //     type: [commentSchema],
+    //     default: []
+    // }
+});
+
 // const messageSchema = new mongoose.Schema({
 //     from_id: {
 //         type: String,
@@ -67,6 +89,7 @@ const userSchema = new mongoose.Schema({
     // besties: [String],
     // enemies: [String],
     posts: [postSchema],
+    books:[bookSchema],
     // messages: [messageSchema],
     // notifications: [String],
     // profile_image: { type: String, default: "default-avatar" },
@@ -101,3 +124,4 @@ mongoose.model("User", userSchema);
 // mongoose.model("Message", messageSchema);
 mongoose.model("Post", postSchema);
 // mongoose.model("Comment", commentSchema);
+mongoose.model("Book", bookSchema);

@@ -2,6 +2,7 @@ const passport = require("passport");
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const Post = mongoose.model("Post");
+const Book = mongoose.model("Book");
 // const Comment = mongoose.model("Comment");
 // const Message = mongoose.model("Message");
 // const timeAgo = require("time-ago");
@@ -405,6 +406,34 @@ const createPost = function({ body, payload }, res) {
     });
 }
 
+//create new Book
+const createBook = function({ body, payload }, res) {
+    if(!body.title || !body.summary) {
+        return res.statusJson(400, { message: "Insufficient data sent with the request." });
+    }
+    
+    let userId = '60746da2c519c41638f63bd8'; //payload._id; 
+    
+    const book = new Book();
+    
+    book.title = body.title;
+    book.summary = body.summary;
+    
+    User.findById(userId, (err, user) => {
+        if(err) { return res.json({ err: err }); }
+        
+        let newPost = book.toObject();
+        newPost.name = 'sample';//payload.name;
+        newPost.ownerid = 'sample';//payload._id;
+        //newPost.ownerProfileImage = user.profile_image;
+        user.books.push(book);
+        user.save((err) => {
+            if(err) { return res.json({ err: err }); }
+            return res.statusJson(201, { message: "Book created", newPost: newPost });
+        });
+    });
+}
+
 // const likeUnlike = function({ payload, params }, res) {
 //     User.findById(params.ownerid, (err, user) => {
 //         if(err) { return res.json({ err: err }); }
@@ -658,6 +687,7 @@ module.exports = {
     // getFriendRequests,
     // resolveFriendRequest,
     createPost,
+    createBook,
     // likeUnlike,
     // postCommentOnPost,
     // sendMessage,

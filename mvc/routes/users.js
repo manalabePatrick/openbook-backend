@@ -25,6 +25,7 @@ router.post("/login", usersCtrl.loginUser);
 
 // // Routes Handling Posts
 router.post("/create-post", middleware.authorize, usersCtrl.createPost);
+router.post("/create-book", usersCtrl.createBook); //middleware.authorize
 // router.post("/like-unlike/:ownerid/:postid", middleware.authorize, usersCtrl.likeUnlike);
 // router.post("/post-comment/:ownerid/:postid", middleware.authorize, usersCtrl.postCommentOnPost);
 
