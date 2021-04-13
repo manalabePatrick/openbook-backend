@@ -412,7 +412,7 @@ const createBook = function({ body, payload }, res) {
         return res.statusJson(400, { message: "Insufficient data sent with the request." });
     }
     
-    let userId = '60746da2c519c41638f63bd8'; //payload._id; 
+    let userId = payload._id; 
     
     const book = new Book();
     
@@ -423,8 +423,8 @@ const createBook = function({ body, payload }, res) {
         if(err) { return res.json({ err: err }); }
         
         let newPost = book.toObject();
-        newPost.name = 'sample';//payload.name;
-        newPost.ownerid = 'sample';//payload._id;
+        newPost.name = payload.name;
+        newPost.ownerid = payload._id;
         //newPost.ownerProfileImage = user.profile_image;
         user.books.push(book);
         user.save((err) => {
