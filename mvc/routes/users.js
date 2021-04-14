@@ -13,7 +13,7 @@ router.post("/login", usersCtrl.loginUser);
 
 // // Get Requests
 // router.get("/generate-feed", middleware.authorize, usersCtrl.generateFeed);
-// router.get("/get-user-data/:userid", middleware.authorize, usersCtrl.getUserData);
+router.get("/get-user-data/:userid", middleware.authorize,usersCtrl.getUserData); 
 // router.get("/get-search-results", middleware.authorize, usersCtrl.getSearchResults);
 
 
@@ -24,7 +24,7 @@ router.post("/login", usersCtrl.loginUser);
 
 
 // // Routes Handling Posts
-router.post("/create-post", middleware.authorize, usersCtrl.createPost);
+router.post("/create-post", usersCtrl.createPost);
 router.post("/create-book", middleware.authorize, usersCtrl.createBook);
 // router.post("/like-unlike/:ownerid/:postid", middleware.authorize, usersCtrl.likeUnlike);
 // router.post("/post-comment/:ownerid/:postid", middleware.authorize, usersCtrl.postCommentOnPost);

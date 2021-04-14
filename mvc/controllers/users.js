@@ -126,7 +126,7 @@ const registerUser = function({body}, res) {
             return res.json({ message: "Something went wrong." });
         } else {
             const token = newUser.getJwt();
-            res.status(201).json({token});
+            res.status(201).json({token, user});
         }
     });
 }
@@ -141,7 +141,7 @@ const loginUser = function(req, res) {
         if(err) { return res.status(404).json(err) }
         if(user) {
             const token = user.getJwt();
-            res.status(201).json({token});
+            res.status(201).json({token, user});
         } else { res.json(info); }
     })(req, res);
 }
@@ -234,91 +234,91 @@ const loginUser = function(req, res) {
 //     });
 // }
 
-// const getUserData = function({params}, res) {
-//     User.findById(params.userid, "-salt -password", {lean: true}, (err, user) => {
-//         if(err) { return res.statusJson(400, { err: err }); }
-//         if(!user) { return res.json(404, { message: "User does not exist." }); }
+const getUserData = function({params}, res) {
+    User.findById(params.userid, "-salt -password", {lean: true}, (err, user) => {
+        if(err) { return res.statusJson(400, { err: err }); }
+        if(!user) { return res.json(404, { message: "User does not exist." }); }
         
-//         function getRandomFriends(friendsList) {
-//             let copyOfFriendsList = Array.from(friendsList);
-//             let randomIds = [];
+        // function getRandomFriends(friendsList) {
+        //     let copyOfFriendsList = Array.from(friendsList);
+        //     let randomIds = [];
             
-//             for(let i = 0; i < 6; i++) {
-//                 if(friendsList.length <= 6) { randomIds = copyOfFriendsList; break;  }
+        //     for(let i = 0; i < 6; i++) {
+        //         if(friendsList.length <= 6) { randomIds = copyOfFriendsList; break;  }
                 
-//                 let randomId = getRandom(0, copyOfFriendsList.length);
-//                 randomIds.push(copyOfFriendsList[randomId]);
-//                 copyOfFriendsList.splice(randomId, 1);
-//             }
+        //         let randomId = getRandom(0, copyOfFriendsList.length);
+        //         randomIds.push(copyOfFriendsList[randomId]);
+        //         copyOfFriendsList.splice(randomId, 1);
+        //     }
             
-//             return new Promise(function(resolve, reject) {
-//                 User.find({'_id': { $in: randomIds }}, "name profile_image", (err, friends) => {
-//                     if(err) { return res.json({ err: err }); }
-//                     resolve(friends);
-//                 });
-//             });
-//         }
+        //     return new Promise(function(resolve, reject) {
+        //         User.find({'_id': { $in: randomIds }}, "name profile_image", (err, friends) => {
+        //             if(err) { return res.json({ err: err }); }
+        //             resolve(friends);
+        //         });
+        //     });
+        // }
         
-//         function addMessengerDetails(messages) {
-//             return new Promise(function(resolve, reject) {
-//                 if(!messages.length) { resolve(messages); }
+        // function addMessengerDetails(messages) {
+        //     return new Promise(function(resolve, reject) {
+        //         if(!messages.length) { resolve(messages); }
                 
-//                 let usersArray = [];
+        //         let usersArray = [];
                 
-//                 for(let message of messages) {
-//                     usersArray.push(message.from_id);
-//                 }
+        //         for(let message of messages) {
+        //             usersArray.push(message.from_id);
+        //         }
                 
-//                 User.find({'_id': { $in: usersArray }}, "name profile_image", (err, users) => {
-//                     if(err) { return res.json({ err: err }); }
+        //         User.find({'_id': { $in: usersArray }}, "name profile_image", (err, users) => {
+        //             if(err) { return res.json({ err: err }); }
                     
-//                     for(message of messages) {
-//                         for(let i = 0; i < users.length; i++) {
-//                             if(message.from_id == users[i]._id) {
-//                                 message.messengerName = users[i].name;
-//                                 message.messengerProfileImage = users[i].profile_image;
-//                                 users.splice(i, 1);
-//                                 break;
-//                             }
-//                         }
-//                     }
+        //             for(message of messages) {
+        //                 for(let i = 0; i < users.length; i++) {
+        //                     if(message.from_id == users[i]._id) {
+        //                         message.messengerName = users[i].name;
+        //                         message.messengerProfileImage = users[i].profile_image;
+        //                         users.splice(i, 1);
+        //                         break;
+        //                     }
+        //                 }
+        //             }
                     
-//                     resolve(messages);
-//                 });
-//             });
-//         }
+        //             resolve(messages);
+        //         });
+        //     });
+        // }
         
-//         user.posts.sort((a, b) => (a.date > b.date) ? -1 : 1);
+        // user.posts.sort((a, b) => (a.date > b.date) ? -1 : 1);
         
-//         addToPosts(user.posts, user);
+        // addToPosts(user.posts, user);
         
-//         let randomFriends = getRandomFriends(user.friends);
-//         let commentDetails = addCommentDetails(user.posts);
-//         let messageDetails = addMessengerDetails(user.messages);
+        // let randomFriends = getRandomFriends(user.friends);
+        // let commentDetails = addCommentDetails(user.posts);
+        // let messageDetails = addMessengerDetails(user.messages);
         
-//         let besties = new Promise(function(resolve, reject) {
-//             User.find({'_id': { $in: user.besties }}, "name profile_image", (err, users) => {
-//                 user.besties = users;
-//                 resolve();
-//             });
-//         });
+        // let besties = new Promise(function(resolve, reject) {
+        //     User.find({'_id': { $in: user.besties }}, "name profile_image", (err, users) => {
+        //         user.besties = users;
+        //         resolve();
+        //     });
+        // });
         
-//         let enemies = new Promise(function(resolve, reject) {
-//             User.find({'_id': { $in: user.enemies }}, "name profile_image", (err, users) => {
-//                 user.enemies = users;
-//                 resolve();
-//             });
-//         });
+        // let enemies = new Promise(function(resolve, reject) {
+        //     User.find({'_id': { $in: user.enemies }}, "name profile_image", (err, users) => {
+        //         user.enemies = users;
+        //         resolve();
+        //     });
+        // });
         
-//         let waitFor = [randomFriends, commentDetails, messageDetails, besties, enemies];
+        // let waitFor = [randomFriends, commentDetails, messageDetails, besties, enemies];
         
-//         Promise.all(waitFor).then((val) => {
-//             user.random_friends = val[0];
-//             user.messages = val[2];
-//             res.statusJson(200, { user: user });
-//         });
-//     });
-// }
+        // Promise.all(waitFor).then((val) => {
+            // user.random_friends = val[0];
+            // user.messages = val[2];
+            res.statusJson(200, { user: user });
+        // });
+    });
+}
 
 // const getFriendRequests = function({query}, res) {
 //     let friendRequests = JSON.parse(query.friend_requests);
@@ -384,7 +384,7 @@ const createPost = function({ body, payload }, res) {
         return res.statusJson(400, { message: "Insufficient data sent with the request." });
     }
     
-    let userId = payload._id; 
+    let userId =  "60770d8e1e2cd024e01605c5";//payload._id; 
     
     const post = new Post();
     
@@ -395,8 +395,8 @@ const createPost = function({ body, payload }, res) {
         if(err) { return res.json({ err: err }); }
         
         let newPost = post.toObject();
-        newPost.name = payload.name;
-        newPost.ownerid = payload._id;
+        newPost.name = "wew";//payload.name;
+        newPost.ownerid = "wew"; //payload._id;
         //newPost.ownerProfileImage = user.profile_image;
         user.posts.push(post);
         user.save((err) => {
@@ -683,7 +683,7 @@ module.exports = {
     // generateFeed,
     // getSearchResults,
     // makeFriendRequest,
-    // getUserData,
+    getUserData,
     // getFriendRequests,
     // resolveFriendRequest,
     createPost,
