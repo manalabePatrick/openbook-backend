@@ -13,7 +13,8 @@ router.post("/login", usersCtrl.loginUser);
 
 // // Get Requests
 // router.get("/generate-feed", middleware.authorize, usersCtrl.generateFeed);
-router.get("/get-user-data/:userid", middleware.authorize,usersCtrl.getUserData); 
+router.get("/get-user-data/:userid", middleware.authorize,usersCtrl.getUserData);
+router.get("/get-all-data", usersCtrl.getAllData);  middleware.authorize
 // router.get("/get-search-results", middleware.authorize, usersCtrl.getSearchResults);
 
 

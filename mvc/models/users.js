@@ -127,6 +127,12 @@ const userSchema = new mongoose.Schema({
     // new_notifications: { type: Number, default: 0 },
 });
 
+const librarySchema = new mongoose.Schema({
+    posts: [postSchema],
+    books:[bookSchema],
+    chapters: [chapterSchema]
+});
+
 
 userSchema.methods.setPassword = function(password) {
     this.salt = crypto.randomBytes(64).toString('hex');
@@ -156,3 +162,4 @@ mongoose.model("Post", postSchema);
 // mongoose.model("Comment", commentSchema);
 mongoose.model("Book", bookSchema);
 mongoose.model("Chapter", chapterSchema);
+mongoose.model("Library", librarySchema);

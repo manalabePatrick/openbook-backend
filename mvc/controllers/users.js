@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const Post = mongoose.model("Post");
 const Book = mongoose.model("Book");
+const Library = mongoose.model("Library");
 const Chapter = mongoose.model("Chapter");
 // const Comment = mongoose.model("Comment");
 // const Message = mongoose.model("Message");
@@ -235,6 +236,15 @@ const loginUser = function(req, res) {
 //     });
 // }
 
+const getAllData = function({params}, res) {
+   User.find((err, data) =>{
+       if(err){
+        res.json(err);
+       }
+       res.json(data);
+   })
+}
+
 const getUserData = function({params}, res) {
     User.findById(params.userid, "-salt -password", {lean: true}, (err, user) => {
         if(err) { return res.statusJson(400, { err: err }); }
@@ -380,6 +390,20 @@ const getUserData = function({params}, res) {
 //     });
 // }
 
+const getAllBook = function({params}, res) {
+    User.find((err, user) =>{
+        if(err){
+            res.json(err)
+        }
+        user.books.find((err, book) =>{
+            if(err){
+                res.json(err)
+            }
+            res.json(book)
+        });
+       
+    }) 
+}
 const createPost = function({ body, payload }, res) {
     if(!body.content) {
         return res.statusJson(400, { message: "Insufficient data sent with the request." });
@@ -433,6 +457,18 @@ const createBook = function({ body, payload }, res) {
         });
     });
 }
+
+//db.users.find().pretty()  db.libraries.find().pretty()
+//show collections
+// function addToLibrary(book){
+//     const library = new Library();
+//     library.books.push(book);
+
+//     library.save((err) =>{
+//         if(err){return console.log(err)}
+//         return console.log("Added to Library");
+//     })
+// }
 
 const createChapter = function({ body, payload }, res) {
     if(!body.title || !body.content || !body.bookId) {
@@ -706,10 +742,12 @@ module.exports = {
     // getAllUsers,
     registerUser,
     loginUser,
+    getAllBook,
     // generateFeed,
     // getSearchResults,
     // makeFriendRequest,
     getUserData,
+    getAllData,
     // getFriendRequests,
     // resolveFriendRequest,
     createPost,
