@@ -381,23 +381,22 @@ const getUserData = function({params}, res) {
 // }
 
 const createPost = function({ body, payload }, res) {
-    if(!body.content || !body.theme) {
+    if(!body.content) {
         return res.statusJson(400, { message: "Insufficient data sent with the request." });
     }
     
-    let userId =  "60770d8e1e2cd024e01605c5";//payload._id; 
+    let userId = payload._id; 
     
     const post = new Post();
-    
-    post.theme = body.theme;
     post.content = body.content;
+    post.bookId = body.bookId;
     
     User.findById(userId, (err, user) => {
         if(err) { return res.json({ err: err }); }
         
         let newPost = post.toObject();
-        newPost.name = "wew";//payload.name;
-        newPost.ownerid = "wew"; //payload._id;
+        // newPost.name = payload.name;
+        // newPost.ownerid =payload._id;
         //newPost.ownerProfileImage = user.profile_image;
         user.posts.push(post);
         user.save((err) => {

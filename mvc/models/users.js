@@ -23,14 +23,17 @@ const postSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    theme: {
-        type: String,
-        default: "primary"
-    },
+    // theme: {
+    //     type: String,
+    //     default: "primary"
+    // },
     likes: {
         type: [String],
         default: []
     },
+    bookId:{
+        type: [String],
+    }
     // comments: {
     //     type: [commentSchema],
     //     default: []

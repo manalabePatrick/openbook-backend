@@ -24,7 +24,7 @@ router.get("/get-user-data/:userid", middleware.authorize,usersCtrl.getUserData)
 
 
 // // Routes Handling Posts
-router.post("/create-post", usersCtrl.createPost);
+router.post("/create-post", middleware.authorize,usersCtrl.createPost);
 router.post("/create-book", middleware.authorize, usersCtrl.createBook);
 router.post("/create-chapter", middleware.authorize,usersCtrl.createChapter); 
 // router.post("/like-unlike/:ownerid/:postid", middleware.authorize, usersCtrl.likeUnlike);
