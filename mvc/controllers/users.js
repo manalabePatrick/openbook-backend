@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const Post = mongoose.model("Post");
 const Book = mongoose.model("Book");
+const Chapter = mongoose.model("Chapter");
 // const Comment = mongoose.model("Comment");
 // const Message = mongoose.model("Message");
 // const timeAgo = require("time-ago");
@@ -434,6 +435,32 @@ const createBook = function({ body, payload }, res) {
     });
 }
 
+const createChapter = function({ body, payload }, res) {
+    if(!body.title || !body.content || !body.bookId) {
+        return res.statusJson(400, { message: "Insufficient data sent with the request." });
+    }
+    let userId = payload._id; 
+    const chapter = new Chapter();
+    
+    chapter.title = body.title;
+    chapter.content = body.content;
+    chapter.bookId = body.bookId;
+
+    User.findById(userId, (err, user) => {
+        if(err) { return res.json({ err: err }); }
+        
+        let newPost = chapter.toObject();
+        // newPost.name = payload.name;
+        // newPost.ownerid = payload._id;
+        //newPost.ownerProfileImage = user.profile_image;
+        user.chapters.push(chapter);
+        user.save((err) => {
+            if(err) { return res.json({ err: err }); }
+            return res.statusJson(201, { message: "Chapter created", newPost: newPost });
+        });
+    });
+}
+
 // const likeUnlike = function({ payload, params }, res) {
 //     User.findById(params.ownerid, (err, user) => {
 //         if(err) { return res.json({ err: err }); }
@@ -688,6 +715,7 @@ module.exports = {
     // resolveFriendRequest,
     createPost,
     createBook,
+    createChapter,
     // likeUnlike,
     // postCommentOnPost,
     // sendMessage,
