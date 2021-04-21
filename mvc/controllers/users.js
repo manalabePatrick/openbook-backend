@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const Post = mongoose.model("Post");
 const Book = mongoose.model("Book");
-const Library = mongoose.model("Library");
+const Favorite = mongoose.model("Favorite");
 const Chapter = mongoose.model("Chapter");
 // const Comment = mongoose.model("Comment");
 // const Message = mongoose.model("Message");
@@ -458,6 +458,29 @@ const createBook = function({ body, payload }, res) {
     });
 }
 
+const addToFave = function({ body, payload }, res) {
+    if(!body.bookId) {
+        return res.statusJson(400, { message: "Insufficient data sent with the request." });
+    }
+    
+    let userId = payload._id; 
+    
+    const favorite = new Favorite();
+    
+    favorite.bookId = body.bookId;
+    
+    User.findById(userId, (err, user) => {
+        if(err) { return res.json({ err: err }); }
+        
+        let newPost = favorite.toObject();
+        user.favorites.push(favorite);
+        user.save((err) => {
+            if(err) { return res.json({ err: err }); }
+            return res.statusJson(201, { message: "Added to Fave", newPost: newPost });
+        });
+    });
+}
+
 //db.users.find().pretty()  db.libraries.find().pretty()
 //show collections
 // function addToLibrary(book){
@@ -753,6 +776,7 @@ module.exports = {
     createPost,
     createBook,
     createChapter,
+    addToFave,
     // likeUnlike,
     // postCommentOnPost,
     // sendMessage,

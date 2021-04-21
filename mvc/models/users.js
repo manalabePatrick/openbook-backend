@@ -64,6 +64,12 @@ const chapterSchema = new mongoose.Schema({
     // }
 });
 
+const FavoriteSchema = new mongoose.Schema({
+    bookId:{
+        type: [String],
+    }
+});
+
 const bookSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -120,6 +126,7 @@ const userSchema = new mongoose.Schema({
     posts: [postSchema],
     books:[bookSchema],
     chapters: [chapterSchema],
+    favorites: [FavoriteSchema]
     // messages: [messageSchema],
     // notifications: [String],
     // profile_image: { type: String, default: "default-avatar" },
@@ -163,3 +170,4 @@ mongoose.model("Post", postSchema);
 mongoose.model("Book", bookSchema);
 mongoose.model("Chapter", chapterSchema);
 mongoose.model("Library", librarySchema);
+mongoose.model("Favorite", FavoriteSchema);

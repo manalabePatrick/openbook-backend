@@ -28,6 +28,7 @@ router.get("/get-all-data", usersCtrl.getAllData);  middleware.authorize
 router.post("/create-post", middleware.authorize,usersCtrl.createPost);
 router.post("/create-book", middleware.authorize, usersCtrl.createBook);
 router.post("/create-chapter", middleware.authorize,usersCtrl.createChapter); 
+router.post("/favorite", middleware.authorize, usersCtrl.addToFave); 
 // router.post("/like-unlike/:ownerid/:postid", middleware.authorize, usersCtrl.likeUnlike);
 // router.post("/post-comment/:ownerid/:postid", middleware.authorize, usersCtrl.postCommentOnPost);
 
