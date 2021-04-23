@@ -442,6 +442,7 @@ const createBook = function({ body, payload }, res) {
     
     book.title = body.title;
     book.summary = body.summary;
+    book.by = body.by;
     
     User.findById(userId, (err, user) => {
         if(err) { return res.json({ err: err }); }
@@ -449,7 +450,6 @@ const createBook = function({ body, payload }, res) {
         let newPost = book.toObject();
         newPost.name = payload.name;
         newPost.ownerid = payload._id;
-        //newPost.ownerProfileImage = user.profile_image;
         user.books.push(book);
         user.save((err) => {
             if(err) { return res.json({ err: err }); }

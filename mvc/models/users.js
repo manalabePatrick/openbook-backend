@@ -86,6 +86,9 @@ const bookSchema = new mongoose.Schema({
         type: [String],
         default: []
     },
+    by:{
+        type: String
+    }
     // comments: {
     //     type: [commentSchema],
     //     default: []
