@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const Post = mongoose.model("Post");
 const Book = mongoose.model("Book");
+const Message = mongoose.model("Message");
 const Favorite = mongoose.model("Favorite");
 const Chapter = mongoose.model("Chapter");
 // const Comment = mongoose.model("Comment");
@@ -443,6 +444,7 @@ const createBook = function({ body, payload }, res) {
     book.title = body.title;
     book.summary = body.summary;
     book.by = body.by;
+    book.owner_id = userId;
     
     User.findById(userId, (err, user) => {
         if(err) { return res.json({ err: err }); }
@@ -454,6 +456,45 @@ const createBook = function({ body, payload }, res) {
         user.save((err) => {
             if(err) { return res.json({ err: err }); }
             return res.statusJson(201, { message: "Book created", newPost: newPost });
+        });
+    });
+}
+
+const createMessage = function({ body, payload }, res) {
+    if(!body.content || !body.from || !body.to) {
+        return res.statusJson(400, { message: "Insufficient data sent with the request." });
+    }
+
+    let userId = body.my_id; 
+    let otherId = body.other_id;
+    
+    const message = new Message();
+    
+    message.content = body.content;
+    message.from = body.from;
+    message.to = body.to;
+    // book.summary = body.summary;
+    // book.by = body.by;
+    // book.owner_id = userId;
+    
+    User.findById(userId, (err, user) => {
+        if(err) { return res.json({ err: err }); }
+        
+        let newPost = message.toObject();
+        user.messages.push(message);
+        user.save((err) => {
+            if(err) { return res.json({ err: err }); }
+            return res.statusJson(201, { message: "Book created", newPost: newPost });
+        });
+    });
+
+    User.findById(otherId, (err, other) => {
+        if(err) { return res.json({ err: err }); }
+        
+        let newPost = message.toObject();
+        other.messages.push(message);
+        other.save((err) => {
+            
         });
     });
 }
@@ -508,9 +549,6 @@ const createChapter = function({ body, payload }, res) {
         if(err) { return res.json({ err: err }); }
         
         let newPost = chapter.toObject();
-        // newPost.name = payload.name;
-        // newPost.ownerid = payload._id;
-        //newPost.ownerProfileImage = user.profile_image;
         user.chapters.push(chapter);
         user.save((err) => {
             if(err) { return res.json({ err: err }); }
@@ -775,6 +813,7 @@ module.exports = {
     // resolveFriendRequest,
     createPost,
     createBook,
+    createMessage,
     createChapter,
     addToFave,
     // likeUnlike,

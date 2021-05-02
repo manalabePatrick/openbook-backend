@@ -48,7 +48,7 @@ const chapterSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    conent: {
+    content: {
         type: String,
     },
     likes: {
@@ -88,6 +88,9 @@ const bookSchema = new mongoose.Schema({
     },
     by:{
         type: String
+    },
+    owner_id:{
+        type: String
     }
     // comments: {
     //     type: [commentSchema],
@@ -97,16 +100,21 @@ const bookSchema = new mongoose.Schema({
 
 
 
-// const messageSchema = new mongoose.Schema({
-//     from_id: {
-//         type: String,
-//         required: true,
-//     },
-//     content: [{
-//         messenger: String,
-//         message: String
-//     }]
-// });
+const messageSchema = new mongoose.Schema({
+    // from_id: {
+    //     type: String,
+    //     required: true,
+    // },
+    from: {
+        type: String,
+    },
+    to: {
+        type: String,
+    },
+    content: {
+        type: String,
+    }
+});
 
 
 
@@ -129,8 +137,8 @@ const userSchema = new mongoose.Schema({
     posts: [postSchema],
     books:[bookSchema],
     chapters: [chapterSchema],
-    favorites: [FavoriteSchema]
-    // messages: [messageSchema],
+    favorites: [FavoriteSchema],
+    messages: [messageSchema],
     // notifications: [String],
     // profile_image: { type: String, default: "default-avatar" },
     // new_message_notifications: { type: [String], default: [] },
@@ -167,7 +175,7 @@ userSchema.methods.getJwt = function() {
 
 
 mongoose.model("User", userSchema);
-// mongoose.model("Message", messageSchema);
+mongoose.model("Message", messageSchema);
 mongoose.model("Post", postSchema);
 // mongoose.model("Comment", commentSchema);
 mongoose.model("Book", bookSchema);
