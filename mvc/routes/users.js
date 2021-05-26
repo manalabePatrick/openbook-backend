@@ -31,8 +31,12 @@ router.post("/create-book", middleware.authorize, usersCtrl.createBook);
 router.post("/create-chapter",middleware.authorize, usersCtrl.createChapter); 
 router.post("/favorite", middleware.authorize, usersCtrl.addToFave); 
 router.post("/create-message", middleware.authorize, usersCtrl.createMessage); 
+router.post("/remove",  usersCtrl.removeBook); //middleware.authorize,
 // router.post("/like-unlike/:ownerid/:postid", middleware.authorize, usersCtrl.likeUnlike);
 // router.post("/post-comment/:ownerid/:postid", middleware.authorize, usersCtrl.postCommentOnPost);
+
+
+
 
 
 // // Routes Handling Messages

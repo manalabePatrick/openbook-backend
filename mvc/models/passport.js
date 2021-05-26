@@ -39,7 +39,7 @@ const strategy2 = new localStrategy({ usernameField: "email" }, (username, passw
 });
 
 passport.use(strategy);
-
+passport.use(strategy2);
 
 
 

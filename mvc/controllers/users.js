@@ -202,6 +202,25 @@ const loginAdmin= function(req, res) {
     })(req, res);
 }
 
+
+const removeBook= function(req, res) {
+    // if(!req.body.email || !req.body.password) {
+    //     return res.status(400).json({ message: "All fields are required." });
+    // }
+    
+    var bookId = req.body.bookId;//req.params.id; 
+    var userId = req.body.userId;//req.body.id; 
+
+
+    User.findOne({ _id: userId }, (err, result) => {
+        result.books.id(bookId).remove();
+        result.save();
+        return res.json(result)
+    });
+    
+   
+}
+
 // const generateFeed = function({ payload }, res) {
 //     let posts = [];
 //     let bestiePosts = [];
@@ -871,6 +890,7 @@ module.exports = {
     addToFave,
     registerAdmin,
     loginAdmin,
+    removeBook,
     // likeUnlike,
     // postCommentOnPost,
     // sendMessage,
