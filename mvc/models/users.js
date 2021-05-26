@@ -91,6 +91,9 @@ const bookSchema = new mongoose.Schema({
     },
     owner_id:{
         type: String
+    },
+    genre:{
+        type: []
     }
     // comments: {
     //     type: [commentSchema],
@@ -130,6 +133,7 @@ const userSchema = new mongoose.Schema({
     },
     password: String,
     salt: String,
+    avatar: String,
     // friends: [String],
     // friend_requests: [String],
     // besties: [String],
@@ -143,6 +147,21 @@ const userSchema = new mongoose.Schema({
     // profile_image: { type: String, default: "default-avatar" },
     // new_message_notifications: { type: [String], default: [] },
     // new_notifications: { type: Number, default: 0 },
+});
+
+
+const adminSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    password: String,
+    salt: String
 });
 
 const librarySchema = new mongoose.Schema({
@@ -171,6 +190,24 @@ userSchema.methods.getJwt = function() {
 }
 
 
+adminSchema.methods.setPassword = function(password) {
+    this.salt = crypto.randomBytes(64).toString('hex');
+    this.password = crypto.pbkdf2Sync(password, this.salt, 1000, 64, "sha512").toString("hex");
+}
+
+adminSchema.methods.validatePassword = function(password) {
+    const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, "sha512").toString("hex");
+    return hash === this.password
+}
+
+adminSchema.methods.getJwt = function() {
+    return jwt.sign({
+        _id: this._id,
+        email: this.email,
+        name: this.name
+    }, process.env.JWT_SECRET);
+}
+
 
 
 
@@ -182,3 +219,4 @@ mongoose.model("Book", bookSchema);
 mongoose.model("Chapter", chapterSchema);
 mongoose.model("Library", librarySchema);
 mongoose.model("Favorite", FavoriteSchema);
+mongoose.model("Admin", adminSchema);

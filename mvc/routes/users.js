@@ -3,13 +3,14 @@ const router = express.Router();
 const middleware = require("./middleware/middleware");
 
 const usersCtrl = require("../controllers/users");
-const fakeUsersCtrl = require("../controllers/fake-users");
+// const fakeUsersCtrl = require("../controllers/fake-users");
 
 
 // Logging In & Registering
 router.post("/register", usersCtrl.registerUser);
 router.post("/login", usersCtrl.loginUser);
-
+router.post("/create-admin", usersCtrl.registerAdmin);
+router.post("/login-admin", usersCtrl.loginAdmin);
 
 // // Get Requests
 // router.get("/generate-feed", middleware.authorize, usersCtrl.generateFeed);

@@ -6,6 +6,7 @@ const Book = mongoose.model("Book");
 const Message = mongoose.model("Message");
 const Favorite = mongoose.model("Favorite");
 const Chapter = mongoose.model("Chapter");
+const Admin = mongoose.model("Admin");
 // const Comment = mongoose.model("Comment");
 // const Message = mongoose.model("Message");
 // const timeAgo = require("time-ago");
@@ -106,7 +107,8 @@ const registerUser = function({body}, res) {
         !body.last_name ||
         !body.email ||
         !body.password ||
-        !body.password_confirm
+        !body.password_confirm ||
+        !body.avatar
     ) {
         return res.send({ message: "All Fields are required." });
     }
@@ -119,6 +121,7 @@ const registerUser = function({body}, res) {
     
     user.name = body.first_name.trim() + " " + body.last_name.trim();
     user.email = body.email;
+    user.avatar = body.avatar;
     user.setPassword(body.password);
     
     user.save((err, newUser) => {
@@ -134,6 +137,41 @@ const registerUser = function({body}, res) {
     });
 }
 
+const registerAdmin = function({body}, res) {
+    if(
+        !body.first_name ||
+        !body.last_name ||
+        !body.email ||
+        !body.password ||
+        !body.password_confirm 
+    ) {
+        return res.send({ message: "All Fields are required." });
+    }
+    
+    if(body.password !== body.password_confirm) {
+        return res.send({ message: "Passwords don't match." });
+    }
+    
+    const admin = new Admin();
+    
+    admin.name = body.first_name.trim() + " " + body.last_name.trim();
+    admin.email = body.email;
+    admin.avatar = body.avatar;
+    admin.setPassword(body.password);
+    
+    admin.save((err, newUser) => {
+        if(err) {
+            if(err.errmsg && err.errmsg.includes("duplicate key error") && err.errmsg.includes("email")) {
+                return res.json({ message: "The provided email is already registered."} );
+            }
+            return res.json({ message: "Something went wrong." });
+        } else {
+            const token = newUser.getJwt();
+            res.status(201).json({token, admin});
+        }
+    });
+}
+
 const loginUser = function(req, res) {
     if(!req.body.email || !req.body.password) {
         return res.status(400).json({ message: "All fields are required." });
@@ -145,6 +183,21 @@ const loginUser = function(req, res) {
         if(user) {
             const token = user.getJwt();
             res.status(201).json({token, user});
+        } else { res.json(info); }
+    })(req, res);
+}
+
+const loginAdmin= function(req, res) {
+    if(!req.body.email || !req.body.password) {
+        return res.status(400).json({ message: "All fields are required." });
+    }
+    
+    
+    passport.authenticate("local", (err, admin, info) => {
+        if(err) { return res.status(404).json(err) }
+        if(admin) {
+            const token = admin.getJwt();
+            res.status(201).json({token, admin});
         } else { res.json(info); }
     })(req, res);
 }
@@ -445,7 +498,7 @@ const createBook = function({ body, payload }, res) {
     book.summary = body.summary;
     book.by = body.by;
     book.owner_id = userId;
-    
+    book.genre = body.genre;
     User.findById(userId, (err, user) => {
         if(err) { return res.json({ err: err }); }
         
@@ -816,6 +869,8 @@ module.exports = {
     createMessage,
     createChapter,
     addToFave,
+    registerAdmin,
+    loginAdmin,
     // likeUnlike,
     // postCommentOnPost,
     // sendMessage,
