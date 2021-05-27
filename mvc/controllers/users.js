@@ -107,8 +107,7 @@ const registerUser = function({body}, res) {
         !body.last_name ||
         !body.email ||
         !body.password ||
-        !body.password_confirm ||
-        !body.avatar
+        !body.password_confirm 
     ) {
         return res.send({ message: "All Fields are required." });
     }
@@ -121,7 +120,6 @@ const registerUser = function({body}, res) {
     
     user.name = body.first_name.trim() + " " + body.last_name.trim();
     user.email = body.email;
-    user.avatar = body.avatar;
     user.setPassword(body.password);
     user.verified = "false";
     user.code = "none";
