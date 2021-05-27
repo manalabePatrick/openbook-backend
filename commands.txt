@@ -1,2 +1,0 @@
-show collections
-db.admins.find().pretty()

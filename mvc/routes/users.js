@@ -15,7 +15,7 @@ router.post("/login-admin", usersCtrl.loginAdmin);
 // // Get Requests
 // router.get("/generate-feed", middleware.authorize, usersCtrl.generateFeed);
 router.get("/get-user-data/:userid", middleware.authorize,usersCtrl.getUserData);
-router.get("/get-all-data", usersCtrl.getAllData);  middleware.authorize
+router.get("/get-all-data", usersCtrl.getAllData);  //middleware.authorize
 // router.get("/get-search-results", middleware.authorize, usersCtrl.getSearchResults);
 
 
@@ -33,6 +33,7 @@ router.post("/favorite", middleware.authorize, usersCtrl.addToFave);
 router.post("/create-message", middleware.authorize, usersCtrl.createMessage); 
 router.post("/remove",  usersCtrl.removeBook); //middleware.authorize,
 router.post("/verify",  usersCtrl.verifyUser);
+router.post("/code",  usersCtrl.verifyCode);
 // router.post("/like-unlike/:ownerid/:postid", middleware.authorize, usersCtrl.likeUnlike);
 // router.post("/post-comment/:ownerid/:postid", middleware.authorize, usersCtrl.postCommentOnPost);
 

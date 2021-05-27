@@ -135,6 +135,8 @@ const userSchema = new mongoose.Schema({
     password: String,
     salt: String,
     avatar: String,
+    verified: String,
+    code:String,
     // friends: [String],
     // friend_requests: [String],
     // besties: [String],

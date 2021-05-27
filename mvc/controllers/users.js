@@ -123,6 +123,8 @@ const registerUser = function({body}, res) {
     user.email = body.email;
     user.avatar = body.avatar;
     user.setPassword(body.password);
+    user.verified = "false";
+    user.code = "none";
     
     user.save((err, newUser) => {
         if(err) {
@@ -222,15 +224,37 @@ const removeBook= function(req, res) {
    
 }
 
+const verifyCode = function(req, res){
+
+    const userId = req.body.id;
+
+    User.updateOne({ _id: userId }, { verified: "true" }, function(err,result) {
+        if (err) {
+          res.send(err);
+        } else {
+            res.json("updated");
+        }
+    });
+}
+
+
 const verifyUser= function(req, res) {
+
+    const userEmail = req.body.email;
+    const userName = req.body.name;
+    const userId = req.body.id;
 
     let code = Math.random().toString(36).substring(7);
 
-    adminId = "60ae850feb680f43d402832d";
-    Admin.updateOne({ _id: adminId }, { code: code }, function(
-        err,
-        result
-      ) {
+    User.updateOne({ _id: userId }, { code: code }, function(err,result) {
+        if (err) {
+          
+        } else {
+            
+        }
+    });
+
+    User.updateOne({ _id: userId }, { code: code }, function(err,result) {
         if (err) {
           res.send(err);
         } else {
@@ -247,16 +271,42 @@ const verifyUser= function(req, res) {
         
             const options = {
             from: "alphaQOpenBook@outlook.com",
-            to: "randmodmail@gmail.com",
+            to: userEmail,
             subject: "Verify Openbook Account",
-            html: "<h1>Verification code: "+ code +"</h1>"
+            // html: "<h1>Verification code: "+ code +"</h1>"
+            html:`<html lang="en">
+            <head>
+              <style>
+                .content {
+                  height: 50%;
+                  width: 50%;
+                  margin-left: auto;
+                  margin-right: auto;
+                  text-align: center;
+                }
+              </style>
+            </head>
+            <body>
+              <div class="content">
+                <h1>OpenBook</h1>
+                <hr />
+                <h4>Hi, `+ userName +`Rando!</h4>
+                <p>To complete the verification, please enter the code below.</p>
+                <br />
+                <h1 style="color: rgb(19, 117, 19)">CODE: `+ code +`</h1>
+                <br />
+                <p>If you do not make this action, please ignore this email.</p>
+              </div>
+            </body>
+          </html>
+          `
             }
         
             transporter.sendMail(options, function(err, info){
             if(err){
                 return res.json(err);
             }
-            return res.json("Sent: "+ info.response);
+            return res.json(code);
             });
             
         }
@@ -936,6 +986,7 @@ module.exports = {
     loginAdmin,
     removeBook,
     verifyUser,
+    verifyCode,
     // likeUnlike,
     // postCommentOnPost,
     // sendMessage,
