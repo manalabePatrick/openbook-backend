@@ -157,6 +157,7 @@ const registerAdmin = function({body}, res) {
     admin.name = body.first_name.trim() + " " + body.last_name.trim();
     admin.email = body.email;
     admin.avatar = body.avatar;
+    admin.code = "none";
     admin.setPassword(body.password);
     
     admin.save((err, newUser) => {
@@ -219,6 +220,49 @@ const removeBook= function(req, res) {
     });
     
    
+}
+
+const verifyUser= function(req, res) {
+
+    let code = Math.random().toString(36).substring(7);
+
+    adminId = "60ae850feb680f43d402832d";
+    Admin.updateOne({ _id: adminId }, { code: code }, function(
+        err,
+        result
+      ) {
+        if (err) {
+          res.send(err);
+        } else {
+          
+
+            const nodemailer = require('nodemailer');
+            const transporter = nodemailer.createTransport({
+            service: "hotmail",
+            auth:{
+                user: "alphaQOpenBook@outlook.com", 
+                pass: "sinigangniInangbayan23$343"
+            }
+            });
+        
+            const options = {
+            from: "alphaQOpenBook@outlook.com",
+            to: "randmodmail@gmail.com",
+            subject: "Verify Openbook Account",
+            html: "<h1>Verification code: "+ code +"</h1>"
+            }
+        
+            transporter.sendMail(options, function(err, info){
+            if(err){
+                return res.json(err);
+            }
+            return res.json("Sent: "+ info.response);
+            });
+            
+        }
+      });
+
+
 }
 
 // const generateFeed = function({ payload }, res) {
@@ -891,6 +935,7 @@ module.exports = {
     registerAdmin,
     loginAdmin,
     removeBook,
+    verifyUser,
     // likeUnlike,
     // postCommentOnPost,
     // sendMessage,

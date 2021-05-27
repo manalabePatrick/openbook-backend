@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
+const { stringify } = require("querystring");
 
 
 // const commentSchema = new mongoose.Schema({
@@ -161,7 +162,8 @@ const adminSchema = new mongoose.Schema({
         required: true
     },
     password: String,
-    salt: String
+    salt: String,
+    code: String,
 });
 
 const librarySchema = new mongoose.Schema({
