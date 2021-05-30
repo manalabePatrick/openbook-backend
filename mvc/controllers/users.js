@@ -7,6 +7,7 @@ const Message = mongoose.model("Message");
 const Favorite = mongoose.model("Favorite");
 const Chapter = mongoose.model("Chapter");
 const Admin = mongoose.model("Admin");
+const Report = mongoose.model("Report");
 // const Comment = mongoose.model("Comment");
 // const Message = mongoose.model("Message");
 // const timeAgo = require("time-ago");
@@ -401,6 +402,15 @@ const verifyUser= function(req, res) {
 //     });
 // }
 
+const getReported = function({params}, res){
+    Report.find((err, data) =>{
+        if(err){
+         res.json(err);
+        }
+        res.json(data);
+    })
+}
+
 const getAllData = function({params}, res) {
    User.find((err, data) =>{
        if(err){
@@ -622,6 +632,29 @@ const createBook = function({ body, payload }, res) {
             return res.statusJson(201, { message: "Book created", newPost: newPost });
         });
     });
+}
+
+
+//Report Book
+const reportBook = function({ body, payload }, res) {
+   
+
+    const report = new Report();
+    
+    report.bookId = body.bookId;
+    report.title = body.title;
+    report.info = body.info;
+    report.type = body.type;
+   
+
+    report.save((err, newUser) => {
+        if(err) {
+            return res.json(err);
+        } else {
+            res.status(201).json(newUser);
+        }
+    });
+
 }
 
 const createMessage = function({ body, payload }, res) {
@@ -985,6 +1018,8 @@ module.exports = {
     removeBook,
     verifyUser,
     verifyCode,
+    reportBook,
+    getReported,
     // likeUnlike,
     // postCommentOnPost,
     // sendMessage,

@@ -40,6 +40,23 @@ const postSchema = new mongoose.Schema({
     //     default: []
     // }
 });
+
+
+const reportSchema = new mongoose.Schema({
+    title: {
+        type: String
+    },
+    info: {
+        type: String
+    },
+    bookId: {
+        type: String
+    },
+    type:{
+        type: []
+    }
+});
+
 const chapterSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -224,3 +241,4 @@ mongoose.model("Chapter", chapterSchema);
 mongoose.model("Library", librarySchema);
 mongoose.model("Favorite", FavoriteSchema);
 mongoose.model("Admin", adminSchema);
+mongoose.model("Report", reportSchema);
