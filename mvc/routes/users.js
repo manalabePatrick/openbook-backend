@@ -34,7 +34,9 @@ router.post("/favorite", middleware.authorize, usersCtrl.addToFave);
 router.post("/create-message", middleware.authorize, usersCtrl.createMessage); 
 router.post("/remove",  usersCtrl.removeBook); //middleware.authorize,
 router.post("/verify",  usersCtrl.verifyUser);
+router.post("/verify-admin",  usersCtrl.verifyAdmin);
 router.post("/code",  usersCtrl.verifyCode);
+router.post("/code-admin",  usersCtrl.AdminCode);
 router.post("/report",  usersCtrl.reportBook);
 
 // router.post("/like-unlike/:ownerid/:postid", middleware.authorize, usersCtrl.likeUnlike);

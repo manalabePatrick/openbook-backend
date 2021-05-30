@@ -183,6 +183,8 @@ const adminSchema = new mongoose.Schema({
     password: String,
     salt: String,
     code: String,
+    verified: String,
+    code:String,
 });
 
 const librarySchema = new mongoose.Schema({

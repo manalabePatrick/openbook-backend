@@ -158,6 +158,7 @@ const registerAdmin = function({body}, res) {
     admin.name = body.first_name.trim() + " " + body.last_name.trim();
     admin.email = body.email;
     admin.avatar = body.avatar;
+    admin.verified = "false";
     admin.code = "none";
     admin.setPassword(body.password);
     
@@ -236,6 +237,19 @@ const verifyCode = function(req, res){
     });
 }
 
+const AdminCode = function(req, res){
+
+    const userId = req.body.id;
+
+    Admin.updateOne({ _id: userId }, { verified: "true" }, function(err,result) {
+        if (err) {
+          res.send(err);
+        } else {
+            res.json("updated");
+        }
+    });
+}
+
 
 const verifyUser= function(req, res) {
 
@@ -254,6 +268,76 @@ const verifyUser= function(req, res) {
     });
 
     User.updateOne({ _id: userId }, { code: code }, function(err,result) {
+        if (err) {
+          res.send(err);
+        } else {
+          
+
+            const nodemailer = require('nodemailer');
+            const transporter = nodemailer.createTransport({
+            service: "hotmail",
+            auth:{
+                user: "alphaQOpenBook@outlook.com", 
+                pass: "sinigangniInangbayan23$343"
+            }
+            });
+        
+            const options = {
+            from: "alphaQOpenBook@outlook.com",
+            to: userEmail,
+            subject: "Verify Openbook Account",
+            // html: "<h1>Verification code: "+ code +"</h1>"
+            html:`<html lang="en">
+            <head>
+              <style>
+                .content {
+                  height: 50%;
+                  width: 50%;
+                  margin-left: auto;
+                  margin-right: auto;
+                  text-align: center;
+                }
+              </style>
+            </head>
+            <body>
+              <div class="content">
+                <h1>OpenBook</h1>
+                <hr />
+                <h4>Hi, `+ userName +`Rando!</h4>
+                <p>To complete the verification, please enter the code below.</p>
+                <br />
+                <h1 style="color: rgb(19, 117, 19)">CODE: `+ code +`</h1>
+                <br />
+                <p>If you do not make this action, please ignore this email.</p>
+              </div>
+            </body>
+          </html>
+          `
+            }
+        
+            transporter.sendMail(options, function(err, info){
+            if(err){
+                return res.json(err);
+            }
+            return res.json(code);
+            });
+            
+        }
+      });
+
+
+}
+
+const verifyAdmin= function(req, res) {
+
+    const userEmail = req.body.email;
+    const userName = req.body.name;
+    const userId = req.body.id;
+
+    let code = Math.random().toString(36).substring(7);
+
+
+    Admin.updateOne({ _id: userId }, { code: code }, function(err,result) {
         if (err) {
           res.send(err);
         } else {
@@ -1020,6 +1104,8 @@ module.exports = {
     verifyCode,
     reportBook,
     getReported,
+    verifyAdmin,
+    AdminCode,
     // likeUnlike,
     // postCommentOnPost,
     // sendMessage,
